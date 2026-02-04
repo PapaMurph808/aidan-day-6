@@ -99,4 +99,79 @@ describe('TodoCard Component', () => {
     
     expect(screen.queryByText(/Due:/)).not.toBeInTheDocument();
   });
+
+  describe('Overdue Indicators (User Story 1)', () => {
+    beforeEach(() => {
+      jest.useFakeTimers();
+      // Set current date to February 4, 2026
+      jest.setSystemTime(new Date('2026-02-04T12:00:00Z'));
+    });
+
+    afterEach(() => {
+      jest.useRealTimers();
+    });
+
+    it('should display overdue styling for past incomplete todo', () => {
+      const overdueTodo = { ...mockTodo, dueDate: '2026-02-03', completed: 0 };
+      const { container } = render(<TodoCard todo={overdueTodo} {...mockHandlers} isLoading={false} />);
+      
+      const card = container.querySelector('.todo-card');
+      expect(card).toHaveClass('overdue');
+      expect(screen.getByLabelText('Overdue')).toBeInTheDocument();
+    });
+
+    it('should NOT display overdue styling for today\'s date', () => {
+      const todayTodo = { ...mockTodo, dueDate: '2026-02-04', completed: 0 };
+      const { container } = render(<TodoCard todo={todayTodo} {...mockHandlers} isLoading={false} />);
+      
+      const card = container.querySelector('.todo-card');
+      expect(card).not.toHaveClass('overdue');
+      expect(screen.queryByLabelText('Overdue')).not.toBeInTheDocument();
+    });
+
+    it('should NOT display overdue styling for future todo', () => {
+      const futureTodo = { ...mockTodo, dueDate: '2026-02-05', completed: 0 };
+      const { container } = render(<TodoCard todo={futureTodo} {...mockHandlers} isLoading={false} />);
+      
+      const card = container.querySelector('.todo-card');
+      expect(card).not.toHaveClass('overdue');
+      expect(screen.queryByLabelText('Overdue')).not.toBeInTheDocument();
+    });
+
+    it('should NOT display overdue styling for completed past todo', () => {
+      const completedOverdueTodo = { ...mockTodo, dueDate: '2026-02-03', completed: 1 };
+      const { container } = render(<TodoCard todo={completedOverdueTodo} {...mockHandlers} isLoading={false} />);
+      
+      const card = container.querySelector('.todo-card');
+      expect(card).not.toHaveClass('overdue');
+      expect(screen.queryByLabelText('Overdue')).not.toBeInTheDocument();
+    });
+
+    it('should NOT display overdue styling for todo without due date', () => {
+      const noDateTodo = { ...mockTodo, dueDate: null, completed: 0 };
+      const { container } = render(<TodoCard todo={noDateTodo} {...mockHandlers} isLoading={false} />);
+      
+      const card = container.querySelector('.todo-card');
+      expect(card).not.toHaveClass('overdue');
+      expect(screen.queryByLabelText('Overdue')).not.toBeInTheDocument();
+    });
+
+    it('should remove overdue styling when due date changed from past to future', () => {
+      const overdueTodo = { ...mockTodo, dueDate: '2026-02-03', completed: 0 };
+      const { container, rerender } = render(<TodoCard todo={overdueTodo} {...mockHandlers} isLoading={false} />);
+      
+      // Initially overdue
+      let card = container.querySelector('.todo-card');
+      expect(card).toHaveClass('overdue');
+      
+      // Update to future date
+      const updatedTodo = { ...overdueTodo, dueDate: '2026-02-10' };
+      rerender(<TodoCard todo={updatedTodo} {...mockHandlers} isLoading={false} />);
+      
+      // No longer overdue
+      card = container.querySelector('.todo-card');
+      expect(card).not.toHaveClass('overdue');
+      expect(screen.queryByLabelText('Overdue')).not.toBeInTheDocument();
+    });
+  });
 });

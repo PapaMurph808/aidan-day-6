@@ -294,6 +294,26 @@ p {
   display: flex;
   flex-direction: column;
   gap: var(--space-sm);
+  position: relative;
+}
+
+/* Overdue Badge (User Story 3) */
+.overdue-badge {
+  position: absolute;
+  top: -12px;
+  right: 0;
+  background-color: var(--danger-color);
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  box-shadow: var(--shadow-sm);
+  z-index: 10;
 }
 
 .empty-state {
@@ -332,6 +352,25 @@ p {
   text-decoration: line-through;
   opacity: 0.6;
   color: var(--success-color);
+}
+
+/* Overdue Todo Styling (User Story 1) */
+.todo-card.overdue {
+  border-left: 4px solid var(--danger-color);
+  background-color: rgba(239, 83, 80, 0.05);
+}
+
+.todo-card.overdue .todo-title {
+  color: var(--danger-color);
+}
+
+.overdue-icon {
+  color: var(--danger-color);
+  margin-right: 8px;
+  font-size: 20px;
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
 }
 
 .todo-checkbox {
