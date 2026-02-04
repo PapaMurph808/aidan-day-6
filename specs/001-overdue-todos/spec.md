@@ -5,6 +5,16 @@
 **Status**: Draft  
 **Input**: User description: "Support for Overdue Todo Items - Users need a clear, visual way to identify which todos have not been completed by their due date. This helps users quickly spot overdue items without having to manually check dates against today's date."
 
+## Clarifications
+
+### Session 2026-02-04
+
+- Q: What specific visual treatment should be used to distinguish overdue items? → A: Combination - Use both color AND icon for maximum visibility
+- Q: What happens when a todo becomes overdue while the user is viewing the list (date changes at midnight)? → A: No real-time update - Overdue status determined only at initial page load
+- Q: What happens when an overdue todo's due date is edited to a future date? → A: Immediate visual update - Overdue styling removes instantly when due date changed to future
+- Q: How are overdue items displayed if the user has hundreds of overdue todos? → A: Display them all
+- Q: How does the system determine "today" for borderline cases (todos due at specific times vs. just dates)? → A: Ignore time
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Visual Identification of Overdue Todos (Priority: P1)
@@ -17,11 +27,12 @@ Users need to quickly scan their todo list and immediately identify which items 
 
 **Acceptance Scenarios**:
 
-1. **Given** a todo item exists with a due date in the past and incomplete status, **When** the user views their todo list, **Then** the todo displays with distinct visual styling (color, icon, or indicator) that clearly marks it as overdue
+1. **Given** a todo item exists with a due date in the past and incomplete status, **When** the user views their todo list, **Then** the todo displays with both red/warning color AND a warning icon (e.g., ⚠️) that clearly marks it as overdue
 2. **Given** a todo item exists with today's due date and incomplete status, **When** the user views their todo list, **Then** the todo does NOT display as overdue (only items with past dates are marked)
 3. **Given** a todo item exists with a future due date, **When** the user views their todo list, **Then** the todo displays in normal styling without any overdue indicators
 4. **Given** a todo item is marked as complete and has a past due date, **When** the user views their todo list, **Then** the todo does NOT display as overdue (completion removes overdue status)
 5. **Given** a todo item exists without a due date, **When** the user views their todo list, **Then** the todo displays in normal styling without any overdue indicators
+6. **Given** an overdue todo item is being edited, **When** the user changes the due date from past to future, **Then** the overdue visual styling (color and icon) removes immediately
 
 ---
 
@@ -58,19 +69,19 @@ Users want to see at a glance how many overdue tasks they have without scanning 
 
 ### Edge Cases
 
-- What happens when a todo becomes overdue while the user is viewing the list (date changes at midnight)?
+- Overdue status is calculated at page load only; a todo becoming overdue at midnight requires page refresh to update visual indicators
+- When an overdue todo's due date is edited to a future date, the overdue visual styling removes immediately (recalculates on edit)
+- All overdue items are displayed in the list regardless of quantity (no pagination or limit on overdue section)
+- Due date comparison uses date-only (YYYY-MM-DD), ignoring any time components
 - How does the system handle todos with due dates in different time zones?
 - What happens if the user's system clock is incorrect or manipulated?
-- How are overdue items displayed if the user has hundreds of overdue todos?
-- What happens when an overdue todo's due date is edited to a future date?
-- How does the system determine "today" for borderline cases (todos due at specific times vs. just dates)?
 
 ## Requirements *(mandatory)*
 
 ### Functional Requirements
 
-- **FR-001**: System MUST visually distinguish incomplete todos with past due dates from other todos using distinct styling (color, icon, or border treatment)
-- **FR-002**: System MUST compare todo due dates against the current date to determine overdue status in real-time
+- **FR-001**: System MUST visually distinguish incomplete todos with past due dates from other todos using both red/warning color styling AND a warning icon for maximum visibility and accessibility
+- **FR-002**: System MUST compare todo due dates against the current date to determine overdue status at page load time
 - **FR-003**: System MUST exclude completed todos from overdue visual indicators regardless of their due date
 - **FR-004**: System MUST exclude todos without due dates from overdue status (no due date = never overdue)
 - **FR-005**: System MUST position incomplete overdue todos at the top of the todo list
@@ -78,7 +89,7 @@ Users want to see at a glance how many overdue tasks they have without scanning 
 - **FR-007**: System MUST display a count of incomplete overdue todos in a visible badge or indicator
 - **FR-008**: System MUST update overdue count in real-time when todos are marked complete or when due dates change
 - **FR-009**: System MUST NOT mark todos with today's due date as overdue (only past dates)
-- **FR-010**: System MUST determine "current date" using the user's local system time
+- **FR-010**: System MUST determine "current date" using the user's local system time, comparing dates only (YYYY-MM-DD) and ignoring time components
 
 ### Key Entities
 
