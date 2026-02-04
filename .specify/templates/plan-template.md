@@ -31,7 +31,17 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+Verify compliance with project constitution (`.specify/memory/constitution.md`):
+
+- [ ] **Test-First Development**: Tests will be written before implementation (TDD workflow)
+- [ ] **Code Quality**: Feature design adheres to DRY, KISS, and SOLID principles
+- [ ] **Test Coverage**: Plan includes achieving 80%+ test coverage
+- [ ] **Error Handling**: Design includes comprehensive error handling and user feedback
+- [ ] **Simplicity**: Feature scope is minimal, avoids premature optimization and gold-plating
+- [ ] **Formatting Standards**: Team is aware of 2-space indentation and naming conventions
+- [ ] **Design Consistency**: UI features follow Material Design and Halloween theme guidelines
+
+*Note: All checks should be "Yes" before proceeding. Any violations require explicit justification in Complexity Tracking section.*
 
 ## Project Structure
 
